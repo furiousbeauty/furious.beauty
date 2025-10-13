@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout - Furious Beauty</title>
+<style>
+  html, body { margin:0; padding:0; font-family:Arial,sans-serif; min-height:100vh; display:flex; flex-direction:column; }
+  main { flex:1; display:flex; justify-content:center; align-items:flex-start; padding:20px; background:#f9f9f9; }
+
+  /* Header */
+  header { background:#111; color:white; padding:30px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:100; }
+  header h1 { font-family:'Playfair Display', serif; font-size:48px; margin:0; }
+  nav a { color:white; margin-left:15px; text-decoration:none; font-weight:bold; }
+  nav a:hover { color:rgb(238,39,99); }
+
+  /* Checkout container */
+  .checkout-container { background:#fff; padding:30px; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,0.2); width:100%; max-width:600px; }
+  .checkout-container h2 { color:#e91176; text-align:center; margin-bottom:20px; }
+
+  .checkout-item { display:flex; justify-content:space-between; margin-bottom:10px; font-weight:bold; color:#e91176; font-size:16px; }
+  .checkout-item span { font-weight:normal; color:#111; }
+
+  .total, .shipping, .grand-total { font-size:18px; font-weight:bold; margin-top:10px; }
+  .grand-total { color:#e91176; font-size:20px; }
+
+  .form-group { margin-top:15px; display:flex; flex-direction:column; }
+  .form-group label { margin-bottom:5px; font-weight:bold; }
+  .form-group input, .form-group select { padding:10px; border-radius:5px; border:1px solid #ccc; font-size:16px; }
+
+  #paypal-button-container { margin-top:20px; display:flex; justify-content:center; }
+
+  /* Footer */
+  footer { background:#111; color:white; text-align:center; padding:10px 20px; }
+  footer a { color:white; margin:0 10px; text-decoration:none; font-weight:bold; }
+  footer a:hover { color:rgb(238,39,99); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Furious Beauty</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="index.html#shop">Shop</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <div class="checkout-container">
+    <h2>Checkout</h2>
+
+    <!-- Order items -->
+    <div id="checkout-items"></div>
+    <div class="shipping">Shipping: €5.00</div>
+    <div class="grand-total" id="grand-total">Total: €0.00</div>
+
+    <!-- Customer info form -->
+    <h3>Customer Info</h3>
+    <form id="checkout-form">
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" name="firstName" required>
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" name="lastName" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="address">Address</label>
+        <input type="text" id="address" name="address" required>
+      </div>
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" id="city" name="city" required>
+      </div>
+      <div class="form-group">
+        <label for="postal">Postal Code</label>
+        <input type="text" id="postal" name="postal" required>
+      </div>
+      <div class="form-group">
+        <label for="country">Country</label>
+        <input type="text" id="country" name="country" required>
+      </div>
+
+      <input type="hidden" id="order-details" name="order-details">
+    </form>
+
+    <!-- PayPal button -->
+    <div id="paypal-button-container"></div>
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2025 Furious Beauty. All rights reserved.</p>
+  <p>
+    <a href="https://www.instagram.com/furiousbeautyy" target="_blank">Instagram</a>
+    <a href="https://www.tiktok.com/@furious.beautyy" target="_blank">TikTok</a>
+  </p>
+</footer>
+
+<!-- PayPal SDK -->
+<script src="https://www.paypal.com/sdk/js?client-id=ARlnnFdoGqsh-6WmEKAX74gQVcUTXb5KMZ6i2EXJPe9astxfz-h8La70GlcHiCknty73B3XE9HW9cYzu&currency=EUR"></script>
+
+<script>
+let cart = JSON.parse(localStorage.getItem('furiousCart')) || [];
+const checkoutItemsDiv = document.getElementById('checkout-items');
+const grandTotalDiv = document.getElementById('grand-total');
+const shippingCost = 5.00;
+
+function updateCheckout() {
+  checkoutItemsDiv.innerHTML = '';
+  let total = 0;
+  let orderText = '';
+
+  cart.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'checkout-item';
+    div.innerHTML = `${item.name} x ${item.qty} <span>€${(item.price*item.qty).toFixed(2)}</span>`;
+    checkoutItemsDiv.appendChild(div);
+    total += item.price * item.qty;
+    orderText += `${item.name} x ${item.qty} (€${(item.price*item.qty).toFixed(2)})\n`;
+  });
+
+  const grandTotal = total + shippingCost;
+  grandTotalDiv.textContent = `Total: €${grandTotal.toFixed(2)}`;
+  document.getElementById('order-details').value = orderText + `Shipping: €${shippingCost}\nGrand Total: €${grandTotal.toFixed(2)}`;
+
+  // PayPal button
+  paypal.Buttons({
+    style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
+    createOrder: function(data, actions) {
+      return actions.order.create({
+        purchase_units: [{
+          amount: { value: grandTotal.toFixed(2) },
+          description: 'Furious Beauty order'
+        }]
+      });
+    },
+    onApprove: function(data, actions) {
+      return actions.order.capture().then(function(details) {
+        // Send form data to Formspree
+        const formData = new FormData(document.getElementById('checkout-form'));
+        fetch('https://formspree.io/f/xgvnngdw', { method: 'POST', body: formData })
+          .then(() => {
+            alert(`Thank you ${document.getElementById('firstName').value} for your order!`);
+            localStorage.removeItem('furiousCart');
+            window.location.href = 'thankyou.html';
+          });
+      });
+    }
+  }).render('#paypal-button-container');
+}
+
+updateCheckout();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact - Furious Beauty</title>
+<style>
+html, body { margin:0; padding:0; font-family:Arial,sans-serif; min-height:100vh; display:flex; flex-direction:column; }
+main { flex:1; }
+
+/* Header */
+header { background:#111; color:white; padding: 30px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:100; }
+header h1 { font-family:'Playfair Display', serif; font-size: 48px; margin:0; }
+nav { display:flex; align-items:center; }
+nav a { color:white; margin-left:15px; text-decoration:none; font-weight:bold; }
+nav a:hover { color:rgb(238,39,99); }
+
+/* Contact Form */
+.contact-section { max-width:600px; margin:50px auto; padding:30px; background:#f3c5d7; border-radius:15px; box-shadow:0 8px 20px rgba(0,0,0,0.2); }
+.contact-section h2 { text-align:center; color:#e91176; font-size: 48px; margin-bottom:20px; }
+.contact-section form { display:flex; flex-direction:column; gap:15px; }
+.contact-section input, .contact-section textarea { padding:10px; border-radius:5px; border:1px solid #ccc; font-size:16px; }
+.contact-section button { background:#e91176; color:white; border:none; padding:12px; border-radius:5px; font-weight:bold; cursor:pointer; transition:0.3s; }
+.contact-section button:hover { background:rgb(238,39,99); }
+
+/* Footer */
+footer { background:#111; color:white; text-align:center; padding:10px 20px; }
+footer a { color:white; margin:0 10px; text-decoration:none; font-weight:bold; }
+footer a:hover { color:rgb(238,39,99); }
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Furious Beauty</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="index.html#shop">Shop</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+<main>
+<section class="contact-section">
+  <h2>Contact Us</h2>
+  <form action="https://formspree.io/f/xgvnngdw" method="POST">
+    <input type="text" name="name" placeholder="Your Name" required>
+    <input type="email" name="_replyto" placeholder="Your Email" required>
+    <textarea name="message" rows="6" placeholder="Your Message" required></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+  <p style="text-align:center; margin-top:15px;">Or email us directly at <a href="mailto:contact.furiousbeauty@gmail.com">contact.furiousbeauty@gmail.com</a></p>
+</section>
+</main>
+
+<footer>
+  <p>&copy; 2025 Furious Beauty. All rights reserved.</p>
+  <p>
+    <a href="https://www.instagram.com/furiousbeautyy" target="_blank">Instagram</a>
+    <a href="https://www.tiktok.com/@furious.beautyy" target="_blank">TikTok</a>
+  </p>
+</footer>
+
+
+</body>
+</html>
